@@ -1,35 +1,47 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import './App.css';
+import * as pc from 'playcanvas';
+import React from 'react';
 
-function App() {
-  const [count, setCount] = useState(0)
+class App extends React.Component {
+  
+  componentDidMount() {
+    this.initPlayCanvas();
+  }
 
-  return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+  initPlayCanvas() {
+    const app = new pc.Application(document.getElementById('application-canvas'));
+
+    app.setCanvasResolution(pc.RESOLUTION_AUTO);
+
+    const box = new pc.Entity('cube');
+    box.addComponent('model', {
+      type: 'box'
+    });
+    app.root.addChild(box);
+    
+    const camera = new pc.Entity('camera');
+    camera.addComponent('camera', {
+      clearColor: new pc.Color(0.1, 0.1, 0.1)
+    });
+    app.root.addChild(camera);
+    camera.setPosition(0, 0, 3);
+    
+    const light = new pc.Entity('light');
+    light.addComponent('light');
+    app.root.addChild(light);
+    light.setEulerAngles(45, 0, 0);
+    
+    app.on('update', dt => box.rotate(10 * dt, 20 * dt, 30 * dt));
+    app.start();
+  }
+
+  render() {
+    return (
+      <div style={{height: '100vh'}}>
+        <canvas id="application-canvas"></canvas>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    );
+  }
 }
 
-export default App
+export default App;
