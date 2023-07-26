@@ -1,20 +1,17 @@
 import * as pc from 'playcanvas';
 import { useEffect, useRef } from 'react';
 
-function startApplication(canvaCurrent) {
-    let canvas = document.getElementById('application-canvas');
-    console.log('Canvas ', canvas)
-    window.pc = pc;
-    const app = new window.pc.Application(canvas, {});
-    app.setCanvasResolution(window.pc.RESOLUTION_AUTO);
-    const box = new window.pc.Entity('cube');
+function startApplication(canvas) {
+    const app = new pc.Application(canvas, {});
+    app.setCanvasResolution(pc.RESOLUTION_AUTO);
+    const box = new pc.Entity('cube');
     box.addComponent('model', {
-    type: 'box'
+        type: 'box'
     });
     app.root.addChild(box);
-    const camera = new window.pc.Entity('camera');
+    const camera = new pc.Entity('camera');
     camera.addComponent('camera', {
-    clearColor: new window.pc.Color(0.1, 0.1, 0.1)
+    clearColor: new pc.Color(0.1, 0.1, 0.1)
     });
     app.root.addChild(camera);
     camera.setPosition(0, 0, 3);
