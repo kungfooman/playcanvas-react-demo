@@ -1,47 +1,96 @@
-import './App.css';
-import * as pc from 'playcanvas';
-import React from 'react';
+import './App.css'
+// import PropTypes from 'prop-types';
+import { useEffect, useState } from 'react'
+import Search from './components/Search'
+import Scene from './components/Scene'
 
-class App extends React.Component {
-  
-  componentDidMount() {
-    this.initPlayCanvas();
+const welcome = "Welcome to this React Website"
+
+function App() {
+  let [development, setDevelopment] = useState(true)
+
+  const names = ["John", "Mary", "Peter", "Sally"]
+  const technologies = [
+    {name: "React", id: 1},
+    {name: "Vue", id: 2},
+    {name: "Angular", id: 3},
+  ]
+
+  const [searchTerm, setSearchTerm] = useState("")
+
+  function toggleDevelopment() {
+    setDevelopment(!development)
   }
 
-  initPlayCanvas() {
-    const app = new pc.Application(document.getElementById('application-canvas'));
-
-    app.setCanvasResolution(pc.RESOLUTION_AUTO);
-
-    const box = new pc.Entity('cube');
-    box.addComponent('model', {
-      type: 'box'
-    });
-    app.root.addChild(box);
-    
-    const camera = new pc.Entity('camera');
-    camera.addComponent('camera', {
-      clearColor: new pc.Color(0.1, 0.1, 0.1)
-    });
-    app.root.addChild(camera);
-    camera.setPosition(0, 0, 3);
-    
-    const light = new pc.Entity('light');
-    light.addComponent('light');
-    app.root.addChild(light);
-    light.setEulerAngles(45, 0, 0);
-    
-    app.on('update', dt => box.rotate(10 * dt, 20 * dt, 30 * dt));
-    app.start();
+  const handleSearch = (event) => {
+    setSearchTerm(event.target.value)
   }
 
-  render() {
-    return (
-      <div style={{height: '100vh', width: '100vw'}}>
-        <canvas id="application-canvas" style={{height: '100%', width: '100%'}}></canvas>
+  useEffect(() => {
+    console.log("Search term changed ", searchTerm)
+  }, [searchTerm])
+
+  return (
+    <div className="App">
+      <h1>{welcome}</h1>
+    {development ? (
+      <div> Hello World! </div>
+    ) : (
+      <GetFooter sub="Change2 s.r.l." number={3884242702} />
+    )}
+      <button style={{backgroundColor: development ? "green" : "red"}} onClick={toggleDevelopment}>
+        {development ? "Activate" : "Deactivate"} Development
+      </button>
+
+      <div className="List">
+        <h2>Team</h2>
+        {names.map((name, index) => (
+          <div key={index}>{name}</div>
+        ))
+        }
+        <h2>Technologies</h2>
+        {technologies.map((technology, index) => (
+          <div key={index}>{technology.name} - N. {technology.id}</div>
+        ))}
       </div>
-    );
-  }
+
+      <Search search={searchTerm} onSearch={handleSearch}/>
+      <SearchDeconstructed  search={searchTerm} onSearch={handleSearch} />
+
+      <Scene />
+    </div>
+  )
 }
 
-export default App;
+const GetFooter = (props) => {
+  return (
+    <div> 
+      Welcome to this React Website
+      <p>{props.sub}</p>
+      <p>{props.number}</p>
+    </div>
+  )
+}
+
+// GetFooter.propTypes = {
+//   sub: PropTypes.string.isRequired,
+//   number: PropTypes.number.isRequired
+// }
+
+const SearchDeconstructed = ({ search, onSearch }) => {
+  return (
+    <div>
+      <label htmlFor="search">Search: </label>
+      <input
+        id="search"
+        type="text"
+        value={search}
+        onChange={onSearch}
+      />
+    </div>
+  )
+}
+export default App
+
+
+
