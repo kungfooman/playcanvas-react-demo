@@ -1,5 +1,5 @@
 import './App.css'
-import Scene from './components/Scene'
+import Scene from './components/Scene.jsx'
 
 function App() {
   return (
@@ -9,4 +9,4 @@ function App() {
   )
 }
 
-export default App
+export default App;
