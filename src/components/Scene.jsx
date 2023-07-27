@@ -1,8 +1,16 @@
 import * as pc from 'playcanvas';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, memo } from 'react';
+
+let app = null;
 
 function startApplication(canvas) {
-    const app = new pc.Application(canvas, {});
+    console.log('startApplication');
+    if (app) {
+        console.log('destroying app')
+        app.destroy();
+        app = null;
+    }
+    app = new pc.Application(canvas, {});
     app.setCanvasResolution(pc.RESOLUTION_AUTO);
     const box = new pc.Entity('cube');
     box.addComponent('model', {
@@ -11,7 +19,7 @@ function startApplication(canvas) {
     app.root.addChild(box);
     const camera = new pc.Entity('camera');
     camera.addComponent('camera', {
-    clearColor: new pc.Color(0.1, 0.1, 0.1)
+        clearColor: new pc.Color(0.1, 0.1, 0.1)
     });
     app.root.addChild(camera);
     camera.setPosition(0, 0, 3);
@@ -23,19 +31,18 @@ function startApplication(canvas) {
     app.start();
 }
 
-const Scene = () => {
-
+const Scene = memo(() => {
     const appCanvas = useRef(null);
 
     useEffect(() => {
-        startApplication(appCanvas.current)
-    }, [])
+        startApplication(appCanvas.current);
+    },[]);
 
     return (
         <div className="scene">
             <canvas ref={appCanvas} id='application-canvas'></canvas>
         </div>
     )
-}
+})
 
 export default Scene;
